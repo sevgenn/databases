@@ -1,5 +1,8 @@
 -- Заполнение таблиц iorders и orders_products:
 INSERT INTO orders(user_id) VALUES
+(1),
+(2),
+(4),
 (1);
 
 INSERT INTO orders_products(order_id, product_id, total) VALUES
