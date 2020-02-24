@@ -1,7 +1,7 @@
-/* 1) Создайте таблицу logs типа Archive. Пусть при каждом создании записи в таблицах users, catalogs и products
-      в таблицу logs помещается время и дата создания записи, название таблицы, идентификатор первичного ключа и содержимое поля name. */
+/* 1) РЎРѕР·РґР°Р№С‚Рµ С‚Р°Р±Р»РёС†Сѓ logs С‚РёРїР° Archive. РџСѓСЃС‚СЊ РїСЂРё РєР°Р¶РґРѕРј СЃРѕР·РґР°РЅРёРё Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Р°С… users, catalogs Рё products
+      РІ С‚Р°Р±Р»РёС†Сѓ logs РїРѕРјРµС‰Р°РµС‚СЃСЏ РІСЂРµРјСЏ Рё РґР°С‚Р° СЃРѕР·РґР°РЅРёСЏ Р·Р°РїРёСЃРё, РЅР°Р·РІР°РЅРёРµ С‚Р°Р±Р»РёС†С‹, РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РїРµСЂРІРёС‡РЅРѕРіРѕ РєР»СЋС‡Р° Рё СЃРѕРґРµСЂР¶РёРјРѕРµ РїРѕР»СЏ name. */
 
--- Одним триггером сделать не смог, поэтому три.
+-- РћРґРЅРёРј С‚СЂРёРіРіРµСЂРѕРј СЃРґРµР»Р°С‚СЊ РЅРµ СЃРјРѕРі, РїРѕСЌС‚РѕРјСѓ С‚СЂРё.
 USE shop;
 
 DROP TABLE IF EXISTS logs;
@@ -15,7 +15,7 @@ CREATE TABLE logs (
 DROP TRIGGER IF EXISTS log_users;
 DELIMITER //
 
-CREATE TRIGGER log_users AFTER INSERT ON `users`				-- триггер для записи в users
+CREATE TRIGGER log_users AFTER INSERT ON `users`				-- С‚СЂРёРіРіРµСЂ РґР»СЏ Р·Р°РїРёСЃРё РІ users
 FOR EACH ROW
 BEGIN
 	INSERT INTO logs (`table_name`, `id_pk`, `name`) VALUES(
@@ -25,7 +25,7 @@ BEGIN
 END//
 
 DROP TRIGGER IF EXISTS log_catalogs//
-CREATE TRIGGER log_catalogs AFTER INSERT ON `catalogs`			-- триггер для записи в catalogs
+CREATE TRIGGER log_catalogs AFTER INSERT ON `catalogs`			-- С‚СЂРёРіРіРµСЂ РґР»СЏ Р·Р°РїРёСЃРё РІ catalogs
 FOR EACH ROW
 BEGIN
 	INSERT INTO logs (`table_name`, `id_pk`, `name`) VALUES(
@@ -35,7 +35,7 @@ BEGIN
 END//
 
 DROP TRIGGER IF EXISTS log_products//
-CREATE TRIGGER log_products AFTER INSERT ON `products`			-- триггер для записи в products
+CREATE TRIGGER log_products AFTER INSERT ON `products`			-- С‚СЂРёРіРіРµСЂ РґР»СЏ Р·Р°РїРёСЃРё РІ products
 FOR EACH ROW
 BEGIN
 	INSERT INTO logs (`table_name`, `id_pk`, `name`) VALUES(
@@ -52,7 +52,7 @@ INSERT INTO catalogs(name) VALUES ('Routers');
 INSERT INTO products(name) VALUES ('ASUS');
 
 
-/* 2) (по желанию) Создайте SQL-запрос, который помещает в таблицу users миллион записей. */
+/* 2) (РїРѕ Р¶РµР»Р°РЅРёСЋ) РЎРѕР·РґР°Р№С‚Рµ SQL-Р·Р°РїСЂРѕСЃ, РєРѕС‚РѕСЂС‹Р№ РїРѕРјРµС‰Р°РµС‚ РІ С‚Р°Р±Р»РёС†Сѓ users РјРёР»Р»РёРѕРЅ Р·Р°РїРёСЃРµР№. */
 
 DROP PROCEDURE IF EXISTS million;
 DELIMITER //
@@ -61,7 +61,7 @@ CREATE PROCEDURE million()
 BEGIN
 	DECLARE n INT DEFAULT 0;
 	DECLARE nick VARCHAR(255);
-	WHILE n < 10 DO									-- для 10 записей
+	WHILE n < 10 DO									-- РґР»СЏ 10 Р·Р°РїРёСЃРµР№
 		SET nick = CONCAT('John', '-', n);
 		INSERT INTO users(name) VALUES (nick);
 		SET n = n + 1;
@@ -74,9 +74,9 @@ CALL million();
 SELECT * FROM users;
 
 
-/* 1) NoSQL. В базе данных Redis подберите коллекцию для подсчета посещений с определенных IP-адресов. */
+/* 1) NoSQL. Р’ Р±Р°Р·Рµ РґР°РЅРЅС‹С… Redis РїРѕРґР±РµСЂРёС‚Рµ РєРѕР»Р»РµРєС†РёСЋ РґР»СЏ РїРѕРґСЃС‡РµС‚Р° РїРѕСЃРµС‰РµРЅРёР№ СЃ РѕРїСЂРµРґРµР»РµРЅРЅС‹С… IP-Р°РґСЂРµСЃРѕРІ. */
 
--- Не понял задание, но как-то так (скопировал строки из Ubuntu посде выполнения):
+-- РќРµ РїРѕРЅСЏР» Р·Р°РґР°РЅРёРµ, РЅРѕ РєР°Рє-С‚Рѕ С‚Р°Рє (СЃРєРѕРїРёСЂРѕРІР°Р» СЃС‚СЂРѕРєРё РёР· Ubuntu РїРѕСЃР»Рµ РІС‹РїРѕР»РЅРµРЅРёСЏ):
 127.0.0.1:6379> SET visit_from_95.100.100.50 0
 OK
 127.0.0.1:6379> SET visit_from_95.100.100.100 0
@@ -87,9 +87,10 @@ OK
 "1"
 
 
-/* 2) NoSQL. При помощи базы данных Redis решите задачу поиска имени пользователя по электронному адресу и наоборот, поиск электронного адреса пользователя по его имени. */
+/* 2) NoSQL. РџСЂРё РїРѕРјРѕС‰Рё Р±Р°Р·С‹ РґР°РЅРЅС‹С… Redis СЂРµС€РёС‚Рµ Р·Р°РґР°С‡Сѓ РїРѕРёСЃРєР° РёРјРµРЅРё РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ СЌР»РµРєС‚СЂРѕРЅРЅРѕРјСѓ Р°РґСЂРµСЃСѓ Рё РЅР°РѕР±РѕСЂРѕС‚,
+      РїРѕРёСЃРє СЌР»РµРєС‚СЂРѕРЅРЅРѕРіРѕ Р°РґСЂРµСЃР° РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РїРѕ РµРіРѕ РёРјРµРЅРё. */
 
--- Только поиск email по имени, обратно не получилось:
+-- РўРѕР»СЊРєРѕ РїРѕРёСЃРє email РїРѕ РёРјРµРЅРё, РѕР±СЂР°С‚РЅРѕ РЅРµ РїРѕР»СѓС‡РёР»РѕСЃСЊ:
 127.0.0.1:6379> HMSET contacts john john@mail.com bill bill@mail.com
 OK
 127.0.0.1:6379> HGET contacts bill
@@ -97,7 +98,7 @@ OK
 
 
 
-/* 3) NoSQL. Организуйте хранение категорий и товарных позиций учебной базы данных shop в СУБД MongoDB. */
+/* 3) NoSQL. РћСЂРіР°РЅРёР·СѓР№С‚Рµ С…СЂР°РЅРµРЅРёРµ РєР°С‚РµРіРѕСЂРёР№ Рё С‚РѕРІР°СЂРЅС‹С… РїРѕР·РёС†РёР№ СѓС‡РµР±РЅРѕР№ Р±Р°Р·С‹ РґР°РЅРЅС‹С… shop РІ РЎРЈР‘Р” MongoDB. */
 
--- Не успел.
+-- РќРµ СѓСЃРїРµР».
 
