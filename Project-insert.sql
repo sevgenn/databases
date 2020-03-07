@@ -71,29 +71,29 @@ INSERT INTO classes VALUES
 (NULL, 'body');
 
 INSERT INTO categories VALUES
-(NULL, 'handles', 'Ручки', 1, 2),
-(NULL, 'countertops', 'Столешницы', 2, 2),
-(NULL, 'style-1', 'Фасады эконом', 3, 1),
-(NULL, 'style-2', 'Фасады пластик', 3, 1),
-(NULL, 'style-3', 'Фасады массив', 5, 1),
-(NULL, 'body_economy', 'Корпус ЛДСП', 6, 3),
-(NULL, 'body_premium', 'Корпус МДФ', 6, 3);
+(NULL, 'handles', 'ГђГіГ·ГЄГЁ', 1, 2),
+(NULL, 'countertops', 'Г‘ГІГ®Г«ГҐГёГ­ГЁГ¶Г»', 2, 2),
+(NULL, 'style-1', 'Г”Г Г±Г Г¤Г» ГЅГЄГ®Г­Г®Г¬', 3, 1),
+(NULL, 'style-2', 'Г”Г Г±Г Г¤Г» ГЇГ«Г Г±ГІГЁГЄ', 3, 1),
+(NULL, 'style-3', 'Г”Г Г±Г Г¤Г» Г¬Г Г±Г±ГЁГў', 5, 1),
+(NULL, 'body_economy', 'ГЉГ®Г°ГЇГіГ± Г‹Г„Г‘ГЏ', 6, 3),
+(NULL, 'body_premium', 'ГЉГ®Г°ГЇГіГ± ГЊГ„Г”', 6, 3);
 
 INSERT INTO products VALUES
-(NULL, 'facade 400x720', 'Фасад 400х720', 7, 3),
-(NULL, 'facade 450x720', 'Фасад 450х720', 8, 3),
-(NULL, 'facade 600x720', 'Фасад 600х720', 9, 3),
-(NULL, 'facade 400x720', 'Фасад 400х720', 7, 5),
-(NULL, 'facade 450x720', 'Фасад 450х720', 8, 5),
-(NULL, 'facade 600x720', 'Фасад 600х720', 9, 5),
-(NULL, 'handle-1', 'Ручка-кнопка', 10, 1),
-(NULL, 'handle-2', 'Ручка-скоба', 11, 1),
-(NULL, 'countertop-1', 'Столешница ДСП мрамор', 12, 2),
-(NULL, 'countertop-2', 'Столешница камень мрамор', 13, 2),
-(NULL, 'thumb 400x720', 'Тумба 400х720', 14, 6),
-(NULL, 'thumb 600x720', 'Тумба 600х720', 15, 6),
-(NULL, 'cupboard 400x720', 'Шкаф 400х720', 14, 6),
-(NULL, 'cupboard 600x720', 'Шкаф 600х720', 15, 6);
+(NULL, 'facade 400x720', 'Г”Г Г±Г Г¤ 400Гµ720', 7, 3),
+(NULL, 'facade 450x720', 'Г”Г Г±Г Г¤ 450Гµ720', 8, 3),
+(NULL, 'facade 600x720', 'Г”Г Г±Г Г¤ 600Гµ720', 9, 3),
+(NULL, 'facade 400x720', 'Г”Г Г±Г Г¤ 400Гµ720', 7, 5),
+(NULL, 'facade 450x720', 'Г”Г Г±Г Г¤ 450Гµ720', 8, 5),
+(NULL, 'facade 600x720', 'Г”Г Г±Г Г¤ 600Гµ720', 9, 5),
+(NULL, 'handle-1', 'ГђГіГ·ГЄГ -ГЄГ­Г®ГЇГЄГ ', 10, 1),
+(NULL, 'handle-2', 'ГђГіГ·ГЄГ -Г±ГЄГ®ГЎГ ', 11, 1),
+(NULL, 'countertop-1', 'Г‘ГІГ®Г«ГҐГёГ­ГЁГ¶Г  Г„Г‘ГЏ Г¬Г°Г Г¬Г®Г°', 12, 2),
+(NULL, 'countertop-2', 'Г‘ГІГ®Г«ГҐГёГ­ГЁГ¶Г  ГЄГ Г¬ГҐГ­Гј Г¬Г°Г Г¬Г®Г°', 13, 2),
+(NULL, 'thumb 400x720', 'Г’ГіГ¬ГЎГ  400Гµ720', 14, 6),
+(NULL, 'thumb 600x720', 'Г’ГіГ¬ГЎГ  600Гµ720', 15, 6),
+(NULL, 'cupboard 400x720', 'ГГЄГ Гґ 400Гµ720', 14, 6),
+(NULL, 'cupboard 600x720', 'ГГЄГ Гґ 600Гµ720', 15, 6);
 
 INSERT INTO prices VALUES
 (1, '2019-12-01', 1000.00),
@@ -159,13 +159,13 @@ INSERT INTO order_product VALUES
 (4, 10, 1);
 
 INSERT INTO discounts VALUES
-(NULL, 0.75, 5, '2020-03-01', '2020-03-10');			-- procedure
+(NULL, 0.75, 5, '2020-03-01', '2020-03-10');
 
 INSERT INTO supplies VALUES
 (NULL, 1, '2020-03-01'),
 (NULL, 2, '2020-03-01');
 
-INSERT INTO supply_product VALUES						-- prewie
+INSERT INTO supply_product VALUES
 (1, 1, 4),
 (1, 2, 4),
 (2, 11, 4),
