@@ -1,52 +1,52 @@
-/* Чтобы не высасывать тему из пальца взял за основу то, с чем хорошо знаком из личного опыта.
-Несколько лет когда-то занимался мебельным производством, поэтому решил написать базу данных
-для приложения, которое позволяет систематизировать и администрировать процессы предприятия:
-формирование заказов, отслеживание закупок, остатков, движений, статистика и анализ заказов, продаж и т.д.
-Идея подойдет как для торговой фирмы, не имеющей своих производственных мощностей, так и для
-производственного предприятия (в этом случае таблица "vendors" - "поставщики" будет ассоциироваться
-с собственным цехом).
+/* Р§С‚РѕР±С‹ РЅРµ РІС‹СЃР°СЃС‹РІР°С‚СЊ С‚РµРјСѓ РёР· РїР°Р»СЊС†Р° РІР·СЏР» Р·Р° РѕСЃРЅРѕРІСѓ С‚Рѕ, СЃ С‡РµРј С…РѕСЂРѕС€Рѕ Р·РЅР°РєРѕРј РёР· Р»РёС‡РЅРѕРіРѕ РѕРїС‹С‚Р°.
+РќРµСЃРєРѕР»СЊРєРѕ Р»РµС‚ РєРѕРіРґР°-С‚Рѕ Р·Р°РЅРёРјР°Р»СЃСЏ РјРµР±РµР»СЊРЅС‹Рј РїСЂРѕРёР·РІРѕРґСЃС‚РІРѕРј, РїРѕСЌС‚РѕРјСѓ СЂРµС€РёР» РЅР°РїРёСЃР°С‚СЊ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
+РґР»СЏ РїСЂРёР»РѕР¶РµРЅРёСЏ, РєРѕС‚РѕСЂРѕРµ РїРѕР·РІРѕР»СЏРµС‚ СЃРёСЃС‚РµРјР°С‚РёР·РёСЂРѕРІР°С‚СЊ Рё Р°РґРјРёРЅРёСЃС‚СЂРёСЂРѕРІР°С‚СЊ РїСЂРѕС†РµСЃСЃС‹ РїСЂРµРґРїСЂРёСЏС‚РёСЏ:
+С„РѕСЂРјРёСЂРѕРІР°РЅРёРµ Р·Р°РєР°Р·РѕРІ, РѕС‚СЃР»РµР¶РёРІР°РЅРёРµ Р·Р°РєСѓРїРѕРє, РѕСЃС‚Р°С‚РєРѕРІ, РґРІРёР¶РµРЅРёР№, СЃС‚Р°С‚РёСЃС‚РёРєР° Рё Р°РЅР°Р»РёР· Р·Р°РєР°Р·РѕРІ, РїСЂРѕРґР°Р¶ Рё С‚.Рґ.
+РРґРµСЏ РїРѕРґРѕР№РґРµС‚ РєР°Рє РґР»СЏ С‚РѕСЂРіРѕРІРѕР№ С„РёСЂРјС‹, РЅРµ РёРјРµСЋС‰РµР№ СЃРІРѕРёС… РїСЂРѕРёР·РІРѕРґСЃС‚РІРµРЅРЅС‹С… РјРѕС‰РЅРѕСЃС‚РµР№, С‚Р°Рє Рё РґР»СЏ
+РїСЂРѕРёР·РІРѕРґСЃС‚РІРµРЅРЅРѕРіРѕ РїСЂРµРґРїСЂРёСЏС‚РёСЏ (РІ СЌС‚РѕРј СЃР»СѓС‡Р°Рµ С‚Р°Р±Р»РёС†Р° "vendors" - "РїРѕСЃС‚Р°РІС‰РёРєРё" Р±СѓРґРµС‚ Р°СЃСЃРѕС†РёРёСЂРѕРІР°С‚СЊСЃСЏ
+СЃ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рј С†РµС…РѕРј).
 
-В первом варианте изначально таблица "продукция" была разбита на три группы (фасады, корпуса, фурнитура)
-в связи со спецификой товара, т.к. разный товар каталогизируется по своей схеме (иногда не связанной с категориями
-из другой группы, иногда пересекающейся). Так группа "furniture" - "фурнитура" может не иметь ничего общего с группой
-"facade" - "фасады", а может быть зависимой. Кроме того разные группы имеют разную частоту
-обновления: группа "bodies" - "корпуса" может вообще не обновляться, а остальные группы
-обновляются в зависимости от конъюнктуры и поставщика. Таким образом три крупные группы
-товара разбивались внутри по собственным категориям, не пересекаясь друг с другом.
-Промежуточная таблица "order_item" (для исключения связи многие-ко-многим) была раздута до трех,
-чтобы исключить неоднозначность в "item_id" из-за разбиения товара на три группы.
+Р’ РїРµСЂРІРѕРј РІР°СЂРёР°РЅС‚Рµ РёР·РЅР°С‡Р°Р»СЊРЅРѕ С‚Р°Р±Р»РёС†Р° "РїСЂРѕРґСѓРєС†РёСЏ" Р±С‹Р»Р° СЂР°Р·Р±РёС‚Р° РЅР° С‚СЂРё РіСЂСѓРїРїС‹ (С„Р°СЃР°РґС‹, РєРѕСЂРїСѓСЃР°, С„СѓСЂРЅРёС‚СѓСЂР°)
+РІ СЃРІСЏР·Рё СЃРѕ СЃРїРµС†РёС„РёРєРѕР№ С‚РѕРІР°СЂР°, С‚.Рє. СЂР°Р·РЅС‹Р№ С‚РѕРІР°СЂ РєР°С‚Р°Р»РѕРіРёР·РёСЂСѓРµС‚СЃСЏ РїРѕ СЃРІРѕРµР№ СЃС…РµРјРµ (РёРЅРѕРіРґР° РЅРµ СЃРІСЏР·Р°РЅРЅРѕР№ СЃ РєР°С‚РµРіРѕСЂРёСЏРјРё
+РёР· РґСЂСѓРіРѕР№ РіСЂСѓРїРїС‹, РёРЅРѕРіРґР° РїРµСЂРµСЃРµРєР°СЋС‰РµР№СЃСЏ). РўР°Рє РіСЂСѓРїРїР° "furniture" - "С„СѓСЂРЅРёС‚СѓСЂР°" РјРѕР¶РµС‚ РЅРµ РёРјРµС‚СЊ РЅРёС‡РµРіРѕ РѕР±С‰РµРіРѕ СЃ РіСЂСѓРїРїРѕР№
+"facade" - "С„Р°СЃР°РґС‹", Р° РјРѕР¶РµС‚ Р±С‹С‚СЊ Р·Р°РІРёСЃРёРјРѕР№. РљСЂРѕРјРµ С‚РѕРіРѕ СЂР°Р·РЅС‹Рµ РіСЂСѓРїРїС‹ РёРјРµСЋС‚ СЂР°Р·РЅСѓСЋ С‡Р°СЃС‚РѕС‚Сѓ
+РѕР±РЅРѕРІР»РµРЅРёСЏ: РіСЂСѓРїРїР° "bodies" - "РєРѕСЂРїСѓСЃР°" РјРѕР¶РµС‚ РІРѕРѕР±С‰Рµ РЅРµ РѕР±РЅРѕРІР»СЏС‚СЊСЃСЏ, Р° РѕСЃС‚Р°Р»СЊРЅС‹Рµ РіСЂСѓРїРїС‹
+РѕР±РЅРѕРІР»СЏСЋС‚СЃСЏ РІ Р·Р°РІРёСЃРёРјРѕСЃС‚Рё РѕС‚ РєРѕРЅСЉСЋРЅРєС‚СѓСЂС‹ Рё РїРѕСЃС‚Р°РІС‰РёРєР°. РўР°РєРёРј РѕР±СЂР°Р·РѕРј С‚СЂРё РєСЂСѓРїРЅС‹Рµ РіСЂСѓРїРїС‹
+С‚РѕРІР°СЂР° СЂР°Р·Р±РёРІР°Р»РёСЃСЊ РІРЅСѓС‚СЂРё РїРѕ СЃРѕР±СЃС‚РІРµРЅРЅС‹Рј РєР°С‚РµРіРѕСЂРёСЏРј, РЅРµ РїРµСЂРµСЃРµРєР°СЏСЃСЊ РґСЂСѓРі СЃ РґСЂСѓРіРѕРј.
+РџСЂРѕРјРµР¶СѓС‚РѕС‡РЅР°СЏ С‚Р°Р±Р»РёС†Р° "order_item" (РґР»СЏ РёСЃРєР»СЋС‡РµРЅРёСЏ СЃРІСЏР·Рё РјРЅРѕРіРёРµ-РєРѕ-РјРЅРѕРіРёРј) Р±С‹Р»Р° СЂР°Р·РґСѓС‚Р° РґРѕ С‚СЂРµС…,
+С‡С‚РѕР±С‹ РёСЃРєР»СЋС‡РёС‚СЊ РЅРµРѕРґРЅРѕР·РЅР°С‡РЅРѕСЃС‚СЊ РІ "item_id" РёР·-Р·Р° СЂР°Р·Р±РёРµРЅРёСЏ С‚РѕРІР°СЂР° РЅР° С‚СЂРё РіСЂСѓРїРїС‹.
 
-В конечном варианте (2 вариант) товары были сведены в одну таблицу, чтобы не осложнять проверку.
-Разбиение категорий товара осуществляется через дополнительную таблицу "classes" для идентификации
-категорий товара (корпуса, фасады, фурнитура).
+Р’ РєРѕРЅРµС‡РЅРѕРј РІР°СЂРёР°РЅС‚Рµ (2 РІР°СЂРёР°РЅС‚) С‚РѕРІР°СЂС‹ Р±С‹Р»Рё СЃРІРµРґРµРЅС‹ РІ РѕРґРЅСѓ С‚Р°Р±Р»РёС†Сѓ, С‡С‚РѕР±С‹ РЅРµ РѕСЃР»РѕР¶РЅСЏС‚СЊ РїСЂРѕРІРµСЂРєСѓ.
+Р Р°Р·Р±РёРµРЅРёРµ РєР°С‚РµРіРѕСЂРёР№ С‚РѕРІР°СЂР° РѕСЃСѓС‰РµСЃС‚РІР»СЏРµС‚СЃСЏ С‡РµСЂРµР· РґРѕРїРѕР»РЅРёС‚РµР»СЊРЅСѓСЋ С‚Р°Р±Р»РёС†Сѓ "classes" РґР»СЏ РёРґРµРЅС‚РёС„РёРєР°С†РёРё
+РєР°С‚РµРіРѕСЂРёР№ С‚РѕРІР°СЂР° (РєРѕСЂРїСѓСЃР°, С„Р°СЃР°РґС‹, С„СѓСЂРЅРёС‚СѓСЂР°).
 
-Итого:
-Файл со скриптами создания БД 'Project'.
+РС‚РѕРіРѕ:
+Р¤Р°Р№Р» СЃРѕ СЃРєСЂРёРїС‚Р°РјРё СЃРѕР·РґР°РЅРёСЏ Р‘Р” 'Project'.
 
-Файл со скриптами наполнения БД 'Project-insert'.
+Р¤Р°Р№Р» СЃРѕ СЃРєСЂРёРїС‚Р°РјРё РЅР°РїРѕР»РЅРµРЅРёСЏ Р‘Р” 'Project-insert'.
 
-Один триггер 'date_delivery' в файле 'Project' формирует предварительное времени исполнения заказа
-с отсрочкой 1 месяц с даты оформления заказа.
+РћРґРёРЅ С‚СЂРёРіРіРµСЂ 'date_delivery' РІ С„Р°Р№Р»Рµ 'Project' С„РѕСЂРјРёСЂСѓРµС‚ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅРѕРµ РІСЂРµРјРµРЅРё РёСЃРїРѕР»РЅРµРЅРёСЏ Р·Р°РєР°Р·Р°
+СЃ РѕС‚СЃСЂРѕС‡РєРѕР№ 1 РјРµСЃСЏС† СЃ РґР°С‚С‹ РѕС„РѕСЂРјР»РµРЅРёСЏ Р·Р°РєР°Р·Р°.
 
-Три представления в листе 'Project-preview'.
+РўСЂРё РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ РІ Р»РёСЃС‚Рµ 'Project-preview'.
 
-Три процедуры (с входными парамеирами и без) в листе 'Project-procedures'.
+РўСЂРё РїСЂРѕС†РµРґСѓСЂС‹ (СЃ РІС…РѕРґРЅС‹РјРё РїР°СЂР°РјРµРёСЂР°РјРё Рё Р±РµР·) РІ Р»РёСЃС‚Рµ 'Project-procedures'.
 */
 
 DROP DATABASE IF EXISTS furniture_company;
 CREATE DATABASE furniture_company;
 
-USE furniture_company;										-- ';' - для единообразия
+USE furniture_company;					-- ';' - РґР»СЏ РµРґРёРЅРѕРѕР±СЂР°Р·РёСЏ
 
 DROP TABLE IF EXISTS adresses;
-CREATE TABLE adresses (										-- таблица с базой адресов (город для иногородних поставщиков, покупателей)
+CREATE TABLE adresses (					-- С‚Р°Р±Р»РёС†Р° СЃ Р±Р°Р·РѕР№ Р°РґСЂРµСЃРѕРІ (РіРѕСЂРѕРґ РґР»СЏ РёРЅРѕРіРѕСЂРѕРґРЅРёС… РїРѕСЃС‚Р°РІС‰РёРєРѕРІ, РїРѕРєСѓРїР°С‚РµР»РµР№)
 id SERIAL PRIMARY KEY,
 city VARCHAR(20) NOT NULL,
 adress VARCHAR(255) NOT NULL
 );
 
 DROP TABLE IF EXISTS media;
-CREATE TABLE media (										-- таблица фото и чертежей
+CREATE TABLE media (					-- С‚Р°Р±Р»РёС†Р° С„РѕС‚Рѕ Рё С‡РµСЂС‚РµР¶РµР№
 id SERIAL PRIMARY KEY,
 filename VARCHAR(255),
 filesize INT,
@@ -54,7 +54,7 @@ metadata JSON
 );
 
 DROP TABLE IF EXISTS persons;
-CREATE TABLE persons (										-- сводная таблица с информацией о покупателях, сотрудниках
+CREATE TABLE persons (					-- СЃРІРѕРґРЅР°СЏ С‚Р°Р±Р»РёС†Р° СЃ РёРЅС„РѕСЂРјР°С†РёРµР№ Рѕ РїРѕРєСѓРїР°С‚РµР»СЏС…, СЃРѕС‚СЂСѓРґРЅРёРєР°С…
 id SERIAL PRIMARY KEY,
 last_name VARCHAR(20) NOT NULL,
 first_name VARCHAR(20) NOT NULL,
@@ -68,7 +68,7 @@ FOREIGN KEY (adress_id) REFERENCES adresses(id)
 );
 
 DROP TABLE IF EXISTS customers;
-CREATE TABLE customers (									-- покупатели
+CREATE TABLE customers (				-- РїРѕРєСѓРїР°С‚РµР»Рё
 id SERIAL PRIMARY KEY,
 contact_name VARCHAR(50) NOT NULL,
 person_id BIGINT UNSIGNED NOT NULL,
@@ -77,7 +77,7 @@ FOREIGN KEY (person_id) REFERENCES persons(id)
 );
 
 DROP TABLE IF EXISTS shops;
-CREATE TABLE shops (										-- магазины
+CREATE TABLE shops (					-- РјР°РіР°Р·РёРЅС‹
 id SERIAL PRIMARY KEY,
 name VARCHAR(50) NOT NULL,
 adress_id BIGINT UNSIGNED NOT NULL,
@@ -86,7 +86,7 @@ FOREIGN KEY (adress_id) REFERENCES adresses(id)
 );
 
 DROP TABLE IF EXISTS managers;
-CREATE TABLE managers (										-- менеджеры, оформляющие заказ
+CREATE TABLE managers (					-- РјРµРЅРµРґР¶РµСЂС‹, РѕС„РѕСЂРјР»СЏСЋС‰РёРµ Р·Р°РєР°Р·
 id SERIAL PRIMARY KEY,
 person_id BIGINT UNSIGNED NOT NULL,
 shop_id BIGINT UNSIGNED NOT NULL,
@@ -100,12 +100,12 @@ CREATE TABLE orders (
 id SERIAL PRIMARY KEY,
 customer_id BIGINT UNSIGNED NOT NULL,
 manager_id BIGINT UNSIGNED NOT NULL,
-order_date DATETIME NOT NULL DEFAULT current_timestamp,					-- дата размещения заказа
-date_delivery DATETIME,													-- срок готовности ТРИГГЕР НА АВТОЗАПОЛНЕНИЕ +30 ДНЕЙ
-status_order ENUM('placed', 'agreed', 'completed', 'canceled'),			-- состояние заказа (размещен, согласован-в работе, выполнен)
-status_payment ENUM('no', 'prepay', 'full'),							-- состояние оплаты (нет, предоплата, оплачен)
-media_id BIGINT UNSIGNED NOT NULL,										-- ссылка на чертеж
-totaldue DECIMAL(9,2),													-- общая стоимость - ИЗБЫТОЧНАЯ ИНФОРМАЦИЯ (но облегчает частое обращение без сложных запросов)
+order_date DATETIME NOT NULL DEFAULT current_timestamp,				-- РґР°С‚Р° СЂР°Р·РјРµС‰РµРЅРёСЏ Р·Р°РєР°Р·Р°
+date_delivery DATETIME,								-- СЃСЂРѕРє РіРѕС‚РѕРІРЅРѕСЃС‚Рё РўР РР“Р“Р•Р  РќРђ РђР’РўРћР—РђРџРћР›РќР•РќРР• +30 Р”РќР•Р™
+status_order ENUM('placed', 'agreed', 'completed', 'canceled'),			-- СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°РєР°Р·Р° (СЂР°Р·РјРµС‰РµРЅ, СЃРѕРіР»Р°СЃРѕРІР°РЅ-РІ СЂР°Р±РѕС‚Рµ, РІС‹РїРѕР»РЅРµРЅ)
+status_payment ENUM('no', 'prepay', 'full'),					-- СЃРѕСЃС‚РѕСЏРЅРёРµ РѕРїР»Р°С‚С‹ (РЅРµС‚, РїСЂРµРґРѕРїР»Р°С‚Р°, РѕРїР»Р°С‡РµРЅ)
+media_id BIGINT UNSIGNED NOT NULL,						-- СЃСЃС‹Р»РєР° РЅР° С‡РµСЂС‚РµР¶
+totaldue DECIMAL(9,2),								-- РѕР±С‰Р°СЏ СЃС‚РѕРёРјРѕСЃС‚СЊ - РР—Р‘Р«РўРћР§РќРђРЇ РРќР¤РћР РњРђР¦РРЇ (РЅРѕ РѕР±Р»РµРіС‡Р°РµС‚ С‡Р°СЃС‚РѕРµ РѕР±СЂР°С‰РµРЅРёРµ Р±РµР· СЃР»РѕР¶РЅС‹С… Р·Р°РїСЂРѕСЃРѕРІ)
 
 FOREIGN KEY (media_id) REFERENCES media(id),
 FOREIGN KEY (customer_id) REFERENCES customers(id),
@@ -115,8 +115,8 @@ FOREIGN KEY (manager_id) REFERENCES managers(id)
 DROP TRIGGER IF EXISTS log_users;
 DELIMITER //
 
-CREATE TRIGGER date_delivery BEFORE INSERT ON orders					-- триггер для orders.date_delivery по умолчанию +30 дней
-FOR EACH ROW															-- формирует предварительную дату доставки
+CREATE TRIGGER date_delivery BEFORE INSERT ON orders				-- С‚СЂРёРіРіРµСЂ РґР»СЏ orders.date_delivery РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ +30 РґРЅРµР№
+FOR EACH ROW									-- С„РѕСЂРјРёСЂСѓРµС‚ РїСЂРµРґРІР°СЂРёС‚РµР»СЊРЅСѓСЋ РґР°С‚Сѓ РґРѕСЃС‚Р°РІРєРё
 BEGIN
 	IF (NEW.date_delivery IS NULL) THEN
 		SET NEW.date_delivery = DATE_ADD(NEW.order_date, INTERVAL 30 DAY);
@@ -126,22 +126,22 @@ END//
 DELIMITER ;
 
 /*
-###########  1 вариант реализации с разделением таблиц товара по трем отдельным группам:  ###########
+###########  1 РІР°СЂРёР°РЅС‚ СЂРµР°Р»РёР·Р°С†РёРё СЃ СЂР°Р·РґРµР»РµРЅРёРµРј С‚Р°Р±Р»РёС† С‚РѕРІР°СЂР° РїРѕ С‚СЂРµРј РѕС‚РґРµР»СЊРЅС‹Рј РіСЂСѓРїРїР°Рј:  ###########
 
 DROP TABLE IF EXISTS order_furniture;
-CREATE TABLE order_furniture (								-- таблица для преобразования "многие-ко-многим" между заказами и товаром-фурнитурой
+CREATE TABLE order_furniture (							-- С‚Р°Р±Р»РёС†Р° РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ "РјРЅРѕРіРёРµ-РєРѕ-РјРЅРѕРіРёРј" РјРµР¶РґСѓ Р·Р°РєР°Р·Р°РјРё Рё С‚РѕРІР°СЂРѕРј-С„СѓСЂРЅРёС‚СѓСЂРѕР№
 order_id BIGINT NOT NULL,
 furniture_id BIGINT NOT NULL,
 quantity INT(3),
 
-PRIMARY KEY (order_id, furniture_id),						-- составной первичный ключ
+PRIMARY KEY (order_id, furniture_id),						-- СЃРѕСЃС‚Р°РІРЅРѕР№ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
 FOREIGN KEY (order_id) REFERENCES orders(id),
 FOREIGN KEY (furniture_id) REFERENCES furnitures(id)
 );
 
 
 DROP TABLE IF EXISTS order_facade;
-CREATE TABLE order_facade (									-- таблица для преобразования "многие-ко-многим" между заказами и товаром-фасадами
+CREATE TABLE order_facade (							-- С‚Р°Р±Р»РёС†Р° РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ "РјРЅРѕРіРёРµ-РєРѕ-РјРЅРѕРіРёРј" РјРµР¶РґСѓ Р·Р°РєР°Р·Р°РјРё Рё С‚РѕРІР°СЂРѕРј-С„Р°СЃР°РґР°РјРё
 order_id BIGINT NOT NULL,
 facade_id BIGINT NOT NULL,
 quantity INT(3),
@@ -152,7 +152,7 @@ FOREIGN KEY (facade_id) REFERENCES facades(id)
 );
 
 DROP TABLE IF EXISTS order_body;
-CREATE TABLE order_body (									-- таблица для преобразования "многие-ко-многим" между заказами и товаром-корпусами
+CREATE TABLE order_body (							-- С‚Р°Р±Р»РёС†Р° РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ "РјРЅРѕРіРёРµ-РєРѕ-РјРЅРѕРіРёРј" РјРµР¶РґСѓ Р·Р°РєР°Р·Р°РјРё Рё С‚РѕРІР°СЂРѕРј-РєРѕСЂРїСѓСЃР°РјРё
 order_id BIGINT NOT NULL,
 body_id BIGINT NOT NULL,
 quantity INT(3),
@@ -163,12 +163,12 @@ FOREIGN KEY (body_id) REFERENCES bodies(id)
 );
 
 DROP TABLE IF EXISTS furnitures;
-CREATE TABLE furnitures (									-- таблица для фурнитуры
+CREATE TABLE furnitures (							-- С‚Р°Р±Р»РёС†Р° РґР»СЏ С„СѓСЂРЅРёС‚СѓСЂС‹
 id SERIAL PRIMARY KEY,									
-item VARCHAR(50) NOT NULL,									-- наименование товара										
+item VARCHAR(50) NOT NULL,							-- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РѕРІР°СЂР°										
 description TEXT,
 price DECIMAL(9,2),
-media_id BIGINT NOT NULL,									-- ссылка на изображение (фото, чертеж)
+media_id BIGINT NOT NULL,							-- СЃСЃС‹Р»РєР° РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРµ (С„РѕС‚Рѕ, С‡РµСЂС‚РµР¶)
 cat_furniture_id BIGINT NOT NULL,
 
 FOREIGN KEY (media_id) REFERENCES media(id),
@@ -177,23 +177,23 @@ FOREIGN KEY (cat_furniture_id) REFERENCES category_furniture(id)
 
 
 DROP TABLE IF EXISTS category_furniture;
-CREATE TABLE category_furniture (							-- таблица для категорий фурнитуры
+CREATE TABLE category_furniture (						-- С‚Р°Р±Р»РёС†Р° РґР»СЏ РєР°С‚РµРіРѕСЂРёР№ С„СѓСЂРЅРёС‚СѓСЂС‹
 id SERIAL PRIMARY KEY,									
-name VARCHAR(50) NOT NULL,									-- наименование категории										
+name VARCHAR(50) NOT NULL,							-- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ РєР°С‚РµРіРѕСЂРёРё										
 description TEXT,
-media_id BIGINT NOT NULL									-- ссылка на изображение
+media_id BIGINT NOT NULL							-- СЃСЃС‹Р»РєР° РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРµ
 );
 
 
 DROP TABLE IF EXISTS facades;
-CREATE TABLE facades (										-- таблица для фасадов
+CREATE TABLE facades (								-- С‚Р°Р±Р»РёС†Р° РґР»СЏ С„Р°СЃР°РґРѕРІ
 id SERIAL PRIMARY KEY,									
-item VARCHAR(50) NOT NULL,									-- наименование товара										
+item VARCHAR(50) NOT NULL,							-- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РѕРІР°СЂР°										
 description TEXT,
 price DECIMAL(9,2),
-media_id BIGINT NOT NULL,									-- ссылка на изображение (фото, чертеж)
+media_id BIGINT NOT NULL,							-- СЃСЃС‹Р»РєР° РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРµ (С„РѕС‚Рѕ, С‡РµСЂС‚РµР¶)
 cat_facade_id BIGINT NOT NULL,
-discount_id BIGINT NOT NULL,								-- ссылка на возможную скидку
+discount_id BIGINT NOT NULL,							-- СЃСЃС‹Р»РєР° РЅР° РІРѕР·РјРѕР¶РЅСѓСЋ СЃРєРёРґРєСѓ
 
 FOREIGN KEY (media_id) REFERENCES media(id),
 FOREIGN KEY (cat_facade_id) REFERENCES category_facade(id),
@@ -202,37 +202,37 @@ FOREIGN KEY (discount_id) REFERENCES discounts(id)
 
 
 DROP TABLE IF EXISTS category_facade;
-CREATE TABLE category_facade (								-- таблица для стилей фасадов
+CREATE TABLE category_facade (							-- С‚Р°Р±Р»РёС†Р° РґР»СЏ СЃС‚РёР»РµР№ С„Р°СЃР°РґРѕРІ
 id SERIAL PRIMARY KEY,									
-name VARCHAR(50) NOT NULL,									-- наименование стиля										
+name VARCHAR(50) NOT NULL,							-- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ СЃС‚РёР»СЏ										
 description TEXT,
-media_id BIGINT NOT NULL,									-- ссылка на изображение
+media_id BIGINT NOT NULL,							-- СЃСЃС‹Р»РєР° РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРµ
 
-UNIQUE unique_name(name(5)									-- исключение повторения названий
+UNIQUE unique_name(name(5)							-- РёСЃРєР»СЋС‡РµРЅРёРµ РїРѕРІС‚РѕСЂРµРЅРёСЏ РЅР°Р·РІР°РЅРёР№
 );
 
 DROP TABLE IF EXISTS bodies;
-CREATE TABLE bodies (										-- таблица для элементов корпуса
+CREATE TABLE bodies (								-- С‚Р°Р±Р»РёС†Р° РґР»СЏ СЌР»РµРјРµРЅС‚РѕРІ РєРѕСЂРїСѓСЃР°
 id SERIAL PRIMARY KEY,									
-item VARCHAR(50) NOT NULL,									-- наименование элемента										
+item VARCHAR(50) NOT NULL,							-- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ СЌР»РµРјРµРЅС‚Р°										
 description TEXT,
 price DECIMAL(9,2),
-media_id BIGINT NOT NULL,									-- ссылка на изображение (фото, чертеж)
+media_id BIGINT NOT NULL,							-- СЃСЃС‹Р»РєР° РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРµ (С„РѕС‚Рѕ, С‡РµСЂС‚РµР¶)
 
 FOREIGN KEY (media_id) REFERENCES media(id)
 );
 */
 
-###########  2 вариант реализации с объединением всех товаров в одну таблицу и созданием двух таблиц: категории и подкатегории:   ###########
+###########  2 РІР°СЂРёР°РЅС‚ СЂРµР°Р»РёР·Р°С†РёРё СЃ РѕР±СЉРµРґРёРЅРµРЅРёРµРј РІСЃРµС… С‚РѕРІР°СЂРѕРІ РІ РѕРґРЅСѓ С‚Р°Р±Р»РёС†Сѓ Рё СЃРѕР·РґР°РЅРёРµРј РґРІСѓС… С‚Р°Р±Р»РёС†: РєР°С‚РµРіРѕСЂРёРё Рё РїРѕРґРєР°С‚РµРіРѕСЂРёРё:   ###########
 
 DROP TABLE IF EXISTS classes;
-CREATE TABLE classes (										-- таблица классов товара: фурнитура, фасады, корпуса
+CREATE TABLE classes (						-- С‚Р°Р±Р»РёС†Р° РєР»Р°СЃСЃРѕРІ С‚РѕРІР°СЂР°: С„СѓСЂРЅРёС‚СѓСЂР°, С„Р°СЃР°РґС‹, РєРѕСЂРїСѓСЃР°
 id SERIAL PRIMARY KEY,
 name VARCHAR(20) NOT NULL
 );
 
 DROP TABLE IF EXISTS categories;
-CREATE TABLE categories (									-- таблица категорий товара внутри каждого класса (фурнитура - ручки, крепеж и т.д., фасады - стили)
+CREATE TABLE categories (					-- С‚Р°Р±Р»РёС†Р° РєР°С‚РµРіРѕСЂРёР№ С‚РѕРІР°СЂР° РІРЅСѓС‚СЂРё РєР°Р¶РґРѕРіРѕ РєР»Р°СЃСЃР° (С„СѓСЂРЅРёС‚СѓСЂР° - СЂСѓС‡РєРё, РєСЂРµРїРµР¶ Рё С‚.Рґ., С„Р°СЃР°РґС‹ - СЃС‚РёР»Рё)
 id SERIAL PRIMARY KEY,
 name VARCHAR(50) NOT NULL,
 description TEXT,
@@ -244,11 +244,11 @@ FOREIGN KEY (class_id) REFERENCES classes(id)
 );
 
 DROP TABLE IF EXISTS products;
-CREATE TABLE products (										-- таблица для товаров
+CREATE TABLE products (						-- С‚Р°Р±Р»РёС†Р° РґР»СЏ С‚РѕРІР°СЂРѕРІ
 id SERIAL PRIMARY KEY,									
-item VARCHAR(50) NOT NULL,									-- наименование товара										
+item VARCHAR(50) NOT NULL,					-- РЅР°РёРјРµРЅРѕРІР°РЅРёРµ С‚РѕРІР°СЂР°										
 description TEXT,
-media_id BIGINT UNSIGNED NOT NULL,							-- ссылка на изображение (фото, чертеж)
+media_id BIGINT UNSIGNED NOT NULL,				-- СЃСЃС‹Р»РєР° РЅР° РёР·РѕР±СЂР°Р¶РµРЅРёРµ (С„РѕС‚Рѕ, С‡РµСЂС‚РµР¶)
 category_id BIGINT UNSIGNED NOT NULL,
 
 FOREIGN KEY (media_id) REFERENCES media(id),
@@ -256,16 +256,16 @@ FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
 DROP TABLE IF EXISTS order_product;
-CREATE TABLE order_product (								-- таблица для преобразования "многие-ко-многим" между заказами и товаром
+CREATE TABLE order_product (					-- С‚Р°Р±Р»РёС†Р° РґР»СЏ РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёСЏ "РјРЅРѕРіРёРµ-РєРѕ-РјРЅРѕРіРёРј" РјРµР¶РґСѓ Р·Р°РєР°Р·Р°РјРё Рё С‚РѕРІР°СЂРѕРј
 order_id BIGINT UNSIGNED NOT NULL,
 item_id BIGINT UNSIGNED NOT NULL,
 quantity INT(3),
 
-PRIMARY KEY (order_id, item_id),							-- составной первичный ключ
+PRIMARY KEY (order_id, item_id),				-- СЃРѕСЃС‚Р°РІРЅРѕР№ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
 FOREIGN KEY (order_id) REFERENCES orders(id),
 FOREIGN KEY (item_id) REFERENCES products(id),
 
-KEY index_of_order_id (order_id, item_id),					-- создание индексов (формальное)
+KEY index_of_order_id (order_id, item_id),			-- СЃРѕР·РґР°РЅРёРµ РёРЅРґРµРєСЃРѕРІ (С„РѕСЂРјР°Р»СЊРЅРѕРµ)
 KEY index_of_item_id (item_id, order_id)
 );
 
@@ -275,14 +275,14 @@ item_id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
 `date` DATETIME NOT NULL DEFAULT current_timestamp,
 price DECIMAL(9,2),
 
-PRIMARY KEY (item_id, `date`),								-- составной первичный ключ
+PRIMARY KEY (item_id, `date`),					-- СЃРѕСЃС‚Р°РІРЅРѕР№ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
 FOREIGN KEY (item_id) REFERENCES products(id)
 );
 
 DROP TABLE IF EXISTS discounts;
 CREATE TABLE discounts (
 id SERIAL PRIMARY KEY,
-discount FLOAT DEFAULT 1,									-- скидка на определенную категорию фасадов
+discount FLOAT DEFAULT 1,					-- СЃРєРёРґРєР° РЅР° РѕРїСЂРµРґРµР»РµРЅРЅСѓСЋ РєР°С‚РµРіРѕСЂРёСЋ С„Р°СЃР°РґРѕРІ
 category_id BIGINT UNSIGNED NOT NULL,
 date_start DATE,
 date_finish DATE,
@@ -291,7 +291,7 @@ FOREIGN KEY (category_id) REFERENCES categories(id)
 );
 
 DROP TABLE IF EXISTS vendors;
-CREATE TABLE vendors (										-- поставщики комплектующих
+CREATE TABLE vendors (						-- РїРѕСЃС‚Р°РІС‰РёРєРё РєРѕРјРїР»РµРєС‚СѓСЋС‰РёС…
 id SERIAL PRIMARY KEY,
 name VARCHAR(50) NOT NULL,
 adress_id BIGINT UNSIGNED NOT NULL,
@@ -300,7 +300,7 @@ FOREIGN KEY (adress_id) REFERENCES adresses(id)
 );
 
 DROP TABLE IF EXISTS supplies;
-CREATE TABLE supplies (										-- поставки
+CREATE TABLE supplies (						-- РїРѕСЃС‚Р°РІРєРё
 id SERIAL PRIMARY KEY,
 vendor_id BIGINT UNSIGNED NOT NULL,
 date_supply DATETIME DEFAULT current_timestamp,
@@ -309,18 +309,18 @@ FOREIGN KEY (vendor_id) REFERENCES vendors(id)
 );
 
 DROP TABLE IF EXISTS supply_product;
-CREATE TABLE supply_product (								-- таблица для исключения "многие-ко-многим"
+CREATE TABLE supply_product (					-- С‚Р°Р±Р»РёС†Р° РґР»СЏ РёСЃРєР»СЋС‡РµРЅРёСЏ "РјРЅРѕРіРёРµ-РєРѕ-РјРЅРѕРіРёРј"
 supply_id BIGINT UNSIGNED NOT NULL,
 item_id BIGINT UNSIGNED NOT NULL,
 quantity INT(3),
 
-PRIMARY KEY (supply_id, item_id),							-- составной первичный ключ
+PRIMARY KEY (supply_id, item_id),				-- СЃРѕСЃС‚Р°РІРЅРѕР№ РїРµСЂРІРёС‡РЅС‹Р№ РєР»СЋС‡
 FOREIGN KEY (supply_id) REFERENCES supplies(id),
 FOREIGN KEY (item_id) REFERENCES products(id)
 );
 
 DROP TABLE IF EXISTS storehouse;
-CREATE TABLE storehouse (									-- товар на складе
+CREATE TABLE storehouse (					-- С‚РѕРІР°СЂ РЅР° СЃРєР»Р°РґРµ
 id SERIAL PRIMARY KEY,
 item_id BIGINT UNSIGNED NOT NULL,
 quantity INT(3) NOT NULL,
@@ -329,9 +329,9 @@ FOREIGN KEY (item_id) REFERENCES products(id)
 );
 
 DROP TABLE IF EXISTS deliveries;
-CREATE TABLE deliveries (									-- доставка
+CREATE TABLE deliveries (					-- РґРѕСЃС‚Р°РІРєР°
 id SERIAL PRIMARY KEY,
-status ENUM('accepted', 'completed', 'canceled'),			-- состояние заказа на доставку
+status ENUM('accepted', 'completed', 'canceled'),		-- СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°РєР°Р·Р° РЅР° РґРѕСЃС‚Р°РІРєСѓ
 price DECIMAL(9,2),
 adress_id BIGINT UNSIGNED NOT NULL,
 order_id BIGINT UNSIGNED NOT NULL,
@@ -341,9 +341,9 @@ FOREIGN KEY (order_id) REFERENCES orders(id)
 );
 
 DROP TABLE IF EXISTS assemblies;
-CREATE TABLE assemblies (									-- сборка
+CREATE TABLE assemblies (					-- СЃР±РѕСЂРєР°
 id SERIAL PRIMARY KEY,
-status ENUM('accepted', 'completed', 'canceled'),			-- состояние заказа на сборку
+status ENUM('accepted', 'completed', 'canceled'),		-- СЃРѕСЃС‚РѕСЏРЅРёРµ Р·Р°РєР°Р·Р° РЅР° СЃР±РѕСЂРєСѓ
 price DECIMAL(9,2),
 adress_id BIGINT UNSIGNED NOT NULL,
 order_id BIGINT UNSIGNED NOT NULL,
